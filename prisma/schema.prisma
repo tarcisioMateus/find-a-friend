@@ -14,14 +14,59 @@ datasource db {
 }
 
 model Org {
-  id String @id @default(uuid()) 
-  name String
-  email String @unique
+  id              String @id @default(uuid())
+  name            String
+  email           String @unique
   hashed_password String
-  
-  address String
-  zipCode String
+
+  address  String
+  zipCode  String
   whatsapp String @unique
+  pets     Pet[]
 
   @@map("orgs")
+}
+
+enum Size {
+  SMALL
+  MEDIUM
+  LARGE
+}
+
+enum Age {
+  PUPPY
+  ADULT
+  SENIOR
+  KITTY
+}
+
+enum Level {
+  ONE
+  TWO
+  THREE
+}
+
+model Pet {
+  id    String @id @default(uuid())
+  name  String
+  about String
+
+  size                Size
+  age                 Age
+  energy_levels       Level @default(TWO)
+  independency_levels Level @default(TWO)
+
+  org                   Org                   @relation(fields: [org_id], references: [id])
+  org_id                String
+  required_for_adoption RequiredForAdoption[]
+
+  @@map("pets")
+}
+
+model RequiredForAdoption {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  pet    Pet    @relation(fields: [pet_id], references: [id])
+  pet_id String
 }
