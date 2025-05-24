@@ -1,14 +1,19 @@
 import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
 import { compare } from 'bcryptjs'
-import { expect, describe, it } from 'vitest'
+import { expect, describe, it, beforeEach } from 'vitest'
 import { SingUpUseCase } from './SingUp'
 import { OrgAlreadyExistsError } from '../errors/org-already-exists-error'
 
-describe('SingUp Use Case', () => {
-  it('should be able to SingUP', async () => {
-    const orgsRepository = new InMemoryOrgsRepository()
-    const sut = new SingUpUseCase(orgsRepository)
+let orgsRepository: InMemoryOrgsRepository
+let sut: SingUpUseCase
 
+describe('SingUp Use Case', () => {
+  beforeEach(() => {
+    orgsRepository = new InMemoryOrgsRepository()
+    sut = new SingUpUseCase(orgsRepository)
+  })
+
+  it('should be able to SingUP', async () => {
     const { org } = await sut.execute({
       name: 'Org1',
       email: 'org@gmail.com',
@@ -22,9 +27,6 @@ describe('SingUp Use Case', () => {
   })
 
   it('should hash org password upon registration', async () => {
-    const orgsRepository = new InMemoryOrgsRepository()
-    const sut = new SingUpUseCase(orgsRepository)
-
     const { org } = await sut.execute({
       name: 'Org1',
       email: 'org@gmail.com',
@@ -43,9 +45,6 @@ describe('SingUp Use Case', () => {
   })
 
   it('should NOT be able to SingUP with same email twice', async () => {
-    const orgsRepository = new InMemoryOrgsRepository()
-    const sut = new SingUpUseCase(orgsRepository)
-
     const email = 'org@gmail.com'
 
     await sut.execute({
