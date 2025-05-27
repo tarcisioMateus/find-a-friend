@@ -17,14 +17,11 @@ export class InMemoryRequiredForAdoptionRepository
     this.RequiredForAdoption.push(Requirement)
   }
 
-  async listByPetId(petId: string): Promise<RequiredForAdoption[] | null> {
+  async listByPetId(petId: string): Promise<RequiredForAdoption[]> {
     const requirements: RequiredForAdoption[] = this.RequiredForAdoption.filter(
       (item) => item.pet_id === petId,
     )
 
-    if (requirements.length === 0) {
-      return null
-    }
     return requirements
   }
 }
