@@ -1,6 +1,11 @@
 import { Prisma, Pet } from '@prisma/client'
-import { PetsRepository } from '../pets-repository'
+import {
+  FilterPetsRequest,
+  FilterPetsResponse,
+  PetsRepository,
+} from '../pets-repository'
 import { randomUUID } from 'node:crypto'
+import { InMemoryOrgsRepository } from './in-memory-orgs-repository'
 
 export class InMemoryPetsRepository implements PetsRepository {
   public Pets: Pet[] = []
@@ -28,5 +33,13 @@ export class InMemoryPetsRepository implements PetsRepository {
       return null
     }
     return Pet
+  }
+
+  async filter(filterRequest: FilterPetsRequest): Promise<FilterPetsResponse> {
+    const orgsRepository = new InMemoryOrgsRepository()
+
+    const city = orgsRepository.Orgs.filter(
+      (item) => item.city === filterRequest.city,
+    )
   }
 }
