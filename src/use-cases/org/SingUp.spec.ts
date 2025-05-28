@@ -1,16 +1,18 @@
 import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
+import { InMemoryGeocodingService } from '@/integrations/opencage/in-memory-geocoding-service'
 import { compare } from 'bcryptjs'
 import { expect, describe, it, beforeEach } from 'vitest'
 import { SingUpUseCase } from './SingUp'
 import { OrgAlreadyExistsError } from '../errors/org-already-exists-error'
 
+const inMemoryGeocodingService = new InMemoryGeocodingService()
 let orgsRepository: InMemoryOrgsRepository
 let sut: SingUpUseCase
 
 describe('SingUp Use Case', () => {
   beforeEach(() => {
     orgsRepository = new InMemoryOrgsRepository()
-    sut = new SingUpUseCase(orgsRepository)
+    sut = new SingUpUseCase(orgsRepository, inMemoryGeocodingService)
   })
 
   it('should be able to SingUP', async () => {

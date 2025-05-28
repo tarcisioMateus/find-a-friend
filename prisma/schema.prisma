@@ -21,6 +21,7 @@ model Org {
 
   address  String
   zipCode  String
+  city     String
   whatsapp String @unique
   pets     Pet[]
 
