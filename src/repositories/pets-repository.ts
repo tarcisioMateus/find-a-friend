@@ -11,7 +11,7 @@ export interface FilterPetsRequest {
   age: Age | null
   energy_levels: Level | null
   independency_levels: Level | null
-  orgs_id?: string[] // needs to be provided only inMemory so it does work
+  orgs_id?: string[] // needs to be provided only inMemoryRepo so it does work
 }
 
 export interface PetsRepository {

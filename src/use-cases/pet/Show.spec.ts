@@ -1,18 +1,38 @@
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets-repository'
+import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
 import { InMemoryRequiredForAdoptionRepository } from '@/repositories/in-memory/in-memory-required-for-adoption-repository'
 import { expect, describe, it, beforeEach } from 'vitest'
 import { ShowUseCase } from './Show'
 import { Size, Age, Level } from '@prisma/client'
+import { hash } from 'bcryptjs'
 
 let petsRepository: InMemoryPetsRepository
+let orgsRepository: InMemoryOrgsRepository
 let requiredForAdoptionRepository: InMemoryRequiredForAdoptionRepository
 let sut: ShowUseCase
 
 describe('Show Pets Use Case', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     petsRepository = new InMemoryPetsRepository()
+    orgsRepository = new InMemoryOrgsRepository()
     requiredForAdoptionRepository = new InMemoryRequiredForAdoptionRepository()
-    sut = new ShowUseCase(petsRepository, requiredForAdoptionRepository)
+
+    await orgsRepository.create({
+      id: 'id 1',
+      name: 'Org1',
+      email: 'org@gmail.com',
+      hashed_password: await hash('123456', 6),
+      address: 'main street studio 96',
+      zipCode: '123456',
+      whatsapp: '98765-4321',
+      city: '',
+    })
+
+    sut = new ShowUseCase(
+      petsRepository,
+      orgsRepository,
+      requiredForAdoptionRepository,
+    )
   })
 
   it('should be able to Show a pet', async () => {
@@ -23,7 +43,7 @@ describe('Show Pets Use Case', () => {
       age: Age.PUPPY,
       energy_levels: Level.THREE,
       independency_levels: Level.ONE,
-      org_id: 'org 1',
+      org_id: 'id 1',
     })
 
     await requiredForAdoptionRepository.create({
@@ -50,7 +70,7 @@ describe('Show Pets Use Case', () => {
       age: Age.PUPPY,
       energy_levels: Level.THREE,
       independency_levels: Level.ONE,
-      org_id: 'org 1',
+      org_id: 'id 1',
     })
 
     await requiredForAdoptionRepository.create({

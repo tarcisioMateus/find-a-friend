@@ -21,6 +21,7 @@ describe('SingIn Use Case', () => {
       address: 'main street studio 96',
       zipCode: '123456',
       whatsapp: '98765-4321',
+      city: '',
     })
 
     const { org } = await sut.execute({
@@ -39,6 +40,7 @@ describe('SingIn Use Case', () => {
       address: 'main street studio 96',
       zipCode: '123456',
       whatsapp: '98765-4321',
+      city: '',
     })
 
     await expect(() =>
