@@ -1,19 +1,21 @@
 import { Prisma, Pet, Size, Age, Level } from '@prisma/client'
 
 export interface FilterPetsResponse {
-  response: { name: string; id: string }[]
+  name: string
+  id: string
 }
 
 export interface FilterPetsRequest {
   city: string
-  size?: Size
-  age?: Age
-  energy_levels?: Level
-  independency_levels?: Level
+  size: Size | null
+  age: Age | null
+  energy_levels: Level | null
+  independency_levels: Level | null
+  orgs_id?: string[] // needs to be provided only inMemory so it does work
 }
 
 export interface PetsRepository {
   create(data: Prisma.PetUncheckedCreateInput): Promise<Pet>
   findById(id: string): Promise<Pet | null>
-  filter(filterRequest: FilterPetsRequest): Promise<FilterPetsResponse>
+  filter(filterRequest: FilterPetsRequest): Promise<FilterPetsResponse[]>
 }

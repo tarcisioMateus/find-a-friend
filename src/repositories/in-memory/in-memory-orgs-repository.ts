@@ -14,6 +14,7 @@ export class InMemoryOrgsRepository implements OrgsRepository {
       address: data.address,
       zipCode: data.zipCode,
       whatsapp: data.whatsapp,
+      city: data.city,
     }
     this.Orgs.push(org)
 

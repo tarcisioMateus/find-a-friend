@@ -5,7 +5,6 @@ import {
   PetsRepository,
 } from '../pets-repository'
 import { randomUUID } from 'node:crypto'
-import { InMemoryOrgsRepository } from './in-memory-orgs-repository'
 
 export class InMemoryPetsRepository implements PetsRepository {
   public Pets: Pet[] = []
@@ -35,11 +34,33 @@ export class InMemoryPetsRepository implements PetsRepository {
     return Pet
   }
 
-  async filter(filterRequest: FilterPetsRequest): Promise<FilterPetsResponse> {
-    const orgsRepository = new InMemoryOrgsRepository()
-
-    const city = orgsRepository.Orgs.filter(
-      (item) => item.city === filterRequest.city,
+  async filter(
+    filterRequest: FilterPetsRequest,
+  ): Promise<FilterPetsResponse[]> {
+    let pets = this.Pets.filter((pet) =>
+      filterRequest.orgs_id?.includes(pet.org_id),
     )
+    if (filterRequest.age) {
+      pets = pets.filter((pet) => pet.age === filterRequest.age)
+    }
+    if (filterRequest.size) {
+      pets = pets.filter((pet) => pet.size === filterRequest.size)
+    }
+    if (filterRequest.energy_levels) {
+      pets = pets.filter(
+        (pet) => pet.energy_levels === filterRequest.energy_levels,
+      )
+    }
+    if (filterRequest.independency_levels) {
+      pets = pets.filter(
+        (pet) => pet.independency_levels === filterRequest.independency_levels,
+      )
+    }
+
+    const filterPets = pets.map((pet) => {
+      return { name: pet.name, id: pet.id }
+    })
+
+    return filterPets
   }
 }
