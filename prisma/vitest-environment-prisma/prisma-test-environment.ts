@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import 'dotenv/config'
-import { spawnSync } from 'node:child_process'
+import { execSync } from 'node:child_process'
 
 import { randomUUID } from 'node:crypto'
 import type { Environment } from 'vitest/environments'
@@ -26,15 +26,7 @@ export default <Environment>{
 
     process.env.DATABASE_URL = databaseURL
 
-    const migrateResult = spawnSync(
-      'npx',
-      ['prisma', 'migrate', 'dev', '--name', 'init', '--skip-seed'],
-      {
-        stdio: 'inherit',
-        env: { ...process.env, DATABASE_URL: databaseURL },
-      },
-    )
-    console.log(migrateResult)
+    execSync('npx prisma migrate deploy')
 
     return {
       async teardown() {
