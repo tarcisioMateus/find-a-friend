@@ -1,5 +1,6 @@
 import { PetsRepository } from '@/repositories/pets-repository'
-import { Size, Age, Level, Pet } from '@prisma/client'
+import { RequiredForAdoptionRepository } from '@/repositories/required-for-adoption-repository'
+import { Size, Age, Level, Pet, RequiredForAdoption } from '@prisma/client'
 
 interface CreateUseCaseRequest {
   name: string
@@ -9,14 +10,19 @@ interface CreateUseCaseRequest {
   energy_levels: Level
   independency_levels: Level
   org_id: string
+  requirements: string[]
 }
 
-interface CreateUseCaseResponse {
+export interface CreateUseCaseResponse {
   pet: Pet
+  requirements: RequiredForAdoption[]
 }
 
 export class CreateUseCase {
-  constructor(private petsRepository: PetsRepository) {}
+  constructor(
+    private petsRepository: PetsRepository,
+    private requiredRepository: RequiredForAdoptionRepository,
+  ) {}
 
   async execute({
     name,
@@ -26,6 +32,7 @@ export class CreateUseCase {
     energy_levels,
     independency_levels,
     org_id,
+    requirements,
   }: CreateUseCaseRequest): Promise<CreateUseCaseResponse> {
     const pet = await this.petsRepository.create({
       name,
@@ -37,6 +44,15 @@ export class CreateUseCase {
       org_id,
     })
 
-    return { pet }
+    const requiredForAdoption: RequiredForAdoption[] = []
+    for (const value of requirements) {
+      const newRequirement = await this.requiredRepository.create({
+        name: value,
+        pet_id: pet.id,
+      })
+      requiredForAdoption.push(newRequirement)
+    }
+
+    return { pet, requirements: requiredForAdoption }
   }
 }

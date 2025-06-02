@@ -1,15 +1,18 @@
 import { InMemoryPetsRepository } from '@/repositories/in-memory/in-memory-pets-repository'
+import { InMemoryRequiredForAdoptionRepository } from '@/repositories/in-memory/in-memory-required-for-adoption-repository'
 import { expect, describe, it, beforeEach } from 'vitest'
 import { CreateUseCase } from './Create'
 import { Size, Age, Level } from '@prisma/client'
 
 let petsRepository: InMemoryPetsRepository
+let requirementsRepository: InMemoryRequiredForAdoptionRepository
 let sut: CreateUseCase
 
 describe('Create Pets Use Case', () => {
   beforeEach(() => {
     petsRepository = new InMemoryPetsRepository()
-    sut = new CreateUseCase(petsRepository)
+    requirementsRepository = new InMemoryRequiredForAdoptionRepository()
+    sut = new CreateUseCase(petsRepository, requirementsRepository)
   })
 
   it('should be able to SingIn', async () => {
@@ -21,8 +24,13 @@ describe('Create Pets Use Case', () => {
       energy_levels: Level.THREE,
       independency_levels: Level.ONE,
       org_id: 'org 1',
+      requirements: ['requirement 1', 'requirement 2'],
     })
 
     expect(response.pet.id).toEqual(expect.any(String))
+    expect(response.requirements).toHaveLength(2)
+    expect(response.requirements[0]).toEqual(
+      expect.objectContaining({ name: 'requirement 1' }),
+    )
   })
 })

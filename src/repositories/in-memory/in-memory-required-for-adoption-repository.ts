@@ -8,13 +8,14 @@ export class InMemoryRequiredForAdoptionRepository
 
   async create(
     data: Prisma.RequiredForAdoptionUncheckedCreateInput,
-  ): Promise<void> {
+  ): Promise<RequiredForAdoption> {
     const Requirement: RequiredForAdoption = {
       id: this.RequiredForAdoption.length + 1,
       name: data.name,
       pet_id: data.pet_id,
     }
     this.RequiredForAdoption.push(Requirement)
+    return Requirement
   }
 
   async listByPetId(petId: string): Promise<RequiredForAdoption[]> {

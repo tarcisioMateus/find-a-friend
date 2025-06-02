@@ -97,8 +97,6 @@ export class OrgsController {
   }
 
   async Profile(req: FastifyRequest, reply: FastifyReply) {
-    await req.jwtVerify()
-
     let org: ProfileUseCaseResponse
     try {
       org = await makeProfileUseCase.execute(req.user.sub)

@@ -9,8 +9,11 @@ export class PrismaRequiredForAdoptionRepository
 
   async create(
     data: Prisma.RequiredForAdoptionUncheckedCreateInput,
-  ): Promise<void> {
-    await prisma.requiredForAdoption.create({ data })
+  ): Promise<RequiredForAdoption> {
+    const requirement: RequiredForAdoption =
+      await prisma.requiredForAdoption.create({ data })
+
+    return requirement
   }
 
   async listByPetId(petId: string): Promise<RequiredForAdoption[]> {
