@@ -1,20 +1,20 @@
 import { InMemoryOrgsRepository } from '@/repositories/in-memory/in-memory-orgs-repository'
 import { hash } from 'bcryptjs'
 import { expect, describe, it, beforeEach } from 'vitest'
-import { SingInUseCase } from './SingIn'
-import { InvalidCredentialsError } from '../errors/invalid-credentials-error'
+import { ProfileUseCase } from './Profile'
+import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 
 let orgsRepository: InMemoryOrgsRepository
-let sut: SingInUseCase
+let sut: ProfileUseCase
 
-describe('SingIn Use Case', () => {
+describe('Profile Use Case', () => {
   beforeEach(() => {
     orgsRepository = new InMemoryOrgsRepository()
-    sut = new SingInUseCase(orgsRepository)
+    sut = new ProfileUseCase(orgsRepository)
   })
 
-  it('should be able to SingIn', async () => {
-    await orgsRepository.create({
+  it('should be able to get Profile', async () => {
+    const orgCreates = await orgsRepository.create({
       name: 'Org1',
       email: 'org@gmail.com',
       hashed_password: await hash('123456', 6),
@@ -24,30 +24,24 @@ describe('SingIn Use Case', () => {
       city: '',
     })
 
-    const org = await sut.execute({
-      email: 'org@gmail.com',
-      password: '123456',
-    })
+    const org = await sut.execute(orgCreates.id)
 
+    console.log(org)
     expect(org.id).toEqual(expect.any(String))
-  })
-
-  it('should NOT be able to SingIn whit wrong password', async () => {
-    await orgsRepository.create({
+    expect(org).toEqual({
+      id: org.id,
       name: 'Org1',
       email: 'org@gmail.com',
-      hashed_password: await hash('123456', 6),
       address: 'main street studio 96',
       zipCode: '123456',
       whatsapp: '98765-4321',
       city: '',
     })
+  })
 
-    await expect(() =>
-      sut.execute({
-        email: 'org@gmail.com',
-        password: '123123',
-      }),
-    ).rejects.toBeInstanceOf(InvalidCredentialsError)
+  it('should NOT be able get Profile with invalid ID', async () => {
+    await expect(() => sut.execute('invalid-id')).rejects.toBeInstanceOf(
+      ResourceNotFoundError,
+    )
   })
 })

@@ -8,17 +8,10 @@ interface SingInUseCaseRequest {
   password: string
 }
 
-interface SingInUseCaseResponse {
-  org: Org
-}
-
 export class SingInUseCase {
   constructor(private orgsRepository: OrgsRepository) {}
 
-  async execute({
-    email,
-    password,
-  }: SingInUseCaseRequest): Promise<SingInUseCaseResponse> {
+  async execute({ email, password }: SingInUseCaseRequest): Promise<Org> {
     const org = await this.orgsRepository.findByEmail(email)
 
     if (!org) {
@@ -31,6 +24,6 @@ export class SingInUseCase {
       throw new InvalidCredentialsError()
     }
 
-    return { org }
+    return org
   }
 }
