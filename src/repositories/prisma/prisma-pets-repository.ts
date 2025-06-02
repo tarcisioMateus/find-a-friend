@@ -6,7 +6,7 @@ import {
 } from '../pets-repository'
 import { prisma } from '@/lib/prisma'
 
-export class InMemoryPetsRepository implements PetsRepository {
+export class PrismaPetsRepository implements PetsRepository {
   async create(data: Prisma.PetUncheckedCreateInput): Promise<Pet> {
     const Pet: Pet = await prisma.pet.create({ data })
 

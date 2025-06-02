@@ -2,7 +2,7 @@ import { Prisma, RequiredForAdoption } from '@prisma/client'
 import { RequiredForAdoptionRepository } from '../required-for-adoption-repository'
 import { prisma } from '@/lib/prisma'
 
-export class InMemoryRequiredForAdoptionRepository
+export class PrismaRequiredForAdoptionRepository
   implements RequiredForAdoptionRepository
 {
   public RequiredForAdoption: RequiredForAdoption[] = []

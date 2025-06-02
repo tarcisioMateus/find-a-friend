@@ -14,10 +14,6 @@ interface SingUpUseCaseRequest {
   whatsapp: string
 }
 
-interface SingUpUseCaseResponse {
-  org: Org
-}
-
 export class SingUpUseCase {
   constructor(
     private orgsRepository: OrgsRepository,
@@ -31,7 +27,7 @@ export class SingUpUseCase {
     address,
     zipCode,
     whatsapp,
-  }: SingUpUseCaseRequest): Promise<SingUpUseCaseResponse> {
+  }: SingUpUseCaseRequest): Promise<Org> {
     const orgWithSameEmail = await this.orgsRepository.findByEmail(email)
 
     if (orgWithSameEmail) {
@@ -56,6 +52,6 @@ export class SingUpUseCase {
       whatsapp,
     })
 
-    return { org }
+    return org
   }
 }
