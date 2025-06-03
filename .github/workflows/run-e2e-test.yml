@@ -1,11 +1,11 @@
-name: Run Unit Tests
+name: Run e2e Tests
 
 on: [pull_request] # This defines WHEN the workflow runs (on a push event)
 
 jobs: # Defines the jobs in this workflow
   run-unit-test: # This is the ID of your job
     runs-on: ubuntu-latest # This is the REQUIRED runner environment for this job, notice the indentation
-    name: Unit Tests # This is an OPTIONAL, human-readable name for the job
+    name: e2e Tests # This is an OPTIONAL, human-readable name for the job
 
     services:
         api-find-a-friend:
