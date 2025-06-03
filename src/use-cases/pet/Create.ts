@@ -1,6 +1,6 @@
 import { PetsRepository } from '@/repositories/pets-repository'
 import { RequiredForAdoptionRepository } from '@/repositories/required-for-adoption-repository'
-import { Size, Age, Level, Pet, RequiredForAdoption } from '@prisma/client'
+import { Size, Age, Level, RequiredForAdoption } from '@prisma/client'
 
 interface CreateUseCaseRequest {
   name: string
@@ -14,7 +14,13 @@ interface CreateUseCaseRequest {
 }
 
 export interface CreateUseCaseResponse {
-  pet: Pet
+  name: string
+  about: string
+  size: Size
+  age: Age
+  energy_levels: Level
+  independency_levels: Level
+  org_id: string
   requirements: RequiredForAdoption[]
 }
 
@@ -53,6 +59,6 @@ export class CreateUseCase {
       requiredForAdoption.push(newRequirement)
     }
 
-    return { pet, requirements: requiredForAdoption }
+    return { ...pet, requirements: requiredForAdoption }
   }
 }

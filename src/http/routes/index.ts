@@ -13,4 +13,6 @@ export async function routes(app: FastifyInstance) {
   app.get('/me', { onRequest: [verifyJWT] }, orgs.Profile)
 
   app.post('/pet/create', { onRequest: [verifyJWT] }, pets.Create)
+  app.get('/pet/filter', pets.Filter)
+  app.get('/pet/show/:id', pets.Show)
 }

@@ -54,12 +54,12 @@ describe('Show Pets Use Case', () => {
       name: 'requirement 2',
       pet_id: pet.id,
     })
-    const response = await sut.execute({ id: pet.id })
+    const response = await sut.execute(pet.id)
 
-    if (!response.pet) {
+    if (!response) {
       throw new Error()
     }
-    expect(response.pet.requirements).toHaveLength(2)
+    expect(response.requirements).toHaveLength(2)
   })
 
   it('should only be able to get the pets requirements', async () => {
@@ -89,16 +89,16 @@ describe('Show Pets Use Case', () => {
       name: 'pet-less requirement 2',
       pet_id: 'do-not-have-pet',
     })
-    const response = await sut.execute({ id: pet.id })
+    const response = await sut.execute(pet.id)
 
-    if (!response.pet) {
+    if (!response) {
       throw new Error()
     }
-    expect(response.pet.requirements).toHaveLength(2)
-    expect(response.pet.requirements[0]).toEqual(
+    expect(response.requirements).toHaveLength(2)
+    expect(response.requirements[0]).toEqual(
       expect.objectContaining({ name: 'requirement 1' }),
     )
-    expect(response.pet.requirements[1]).toEqual(
+    expect(response.requirements[1]).toEqual(
       expect.objectContaining({ name: 'requirement 2' }),
     )
   })

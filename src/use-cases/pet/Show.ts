@@ -4,11 +4,7 @@ import { RequiredForAdoptionRepository } from '@/repositories/required-for-adopt
 import { Size, Age, Level, RequiredForAdoption } from '@prisma/client'
 import { ResourceNotFoundError } from '../errors/resource-not-found-error'
 
-interface ShowUseCaseRequest {
-  id: string
-}
-
-interface PetWithRequirements {
+export interface PetFullInfo {
   id: string
   name: string
   about: string
@@ -22,9 +18,6 @@ interface PetWithRequirements {
   whatsapp: string
   requirements: RequiredForAdoption[]
 }
-interface ShowUseCaseResponse {
-  pet: null | PetWithRequirements
-}
 
 export class ShowUseCase {
   constructor(
@@ -33,11 +26,11 @@ export class ShowUseCase {
     private requiredForAdoptionRepository: RequiredForAdoptionRepository,
   ) {}
 
-  async execute({ id }: ShowUseCaseRequest): Promise<ShowUseCaseResponse> {
+  async execute(id: string): Promise<PetFullInfo> {
     const pet = await this.petsRepository.findById(id)
 
     if (!pet) {
-      return { pet }
+      throw new ResourceNotFoundError()
     }
 
     const requirements: RequiredForAdoption[] =
@@ -47,14 +40,13 @@ export class ShowUseCase {
     if (!org) {
       throw new ResourceNotFoundError()
     }
-
-    const petWithRequirements: PetWithRequirements = {
+    const PetFullInfo: PetFullInfo = {
       ...pet,
       address: org.address,
       whatsapp: org.whatsapp,
       requirements,
     }
 
-    return { pet: petWithRequirements }
+    return PetFullInfo
   }
 }
