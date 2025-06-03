@@ -1,20 +1,22 @@
-name: Run Unit Test
+name: Run Unit Tests
 
-on: [push]
+on: [push] # This defines WHEN the workflow runs (on a push event)
 
-jobs: 
-  run-unit-test:
-    name: Run Unit Test
-    runs-on: ubuntu-latest
+jobs: # Defines the jobs in this workflow
+  run-unit-test: # This is the ID of your job
+    runs-on: ubuntu-latest # This is the REQUIRED runner environment for this job, notice the indentation
+    name: Unit Tests # This is an OPTIONAL, human-readable name for the job
 
-    steps:
-      - uses: actions/checkout@v3
+    steps: # Defines the steps within this job
+      - uses: actions/checkout@v4 # Action to check out your repository code
 
-      - uses: actions/step-node@v3
+      - uses: actions/setup-node@v4 # Action to set up Node.js environment
         with:
           node-version: 18
-          cache: 'npm'
+          cache: 'npm' # Caches node modules for faster builds
 
-      - run: npm ci
+      - name: Install dependencies # Step to install project dependencies
+        run: npm ci
 
-      - run: npm run test
+      - name: Run tests # Step to execute your tests
+        run: npm run test
