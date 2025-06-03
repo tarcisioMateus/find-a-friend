@@ -15,7 +15,7 @@ describe('Create Pets Use Case', () => {
     sut = new CreateUseCase(petsRepository, requirementsRepository)
   })
 
-  it('should be able to SingIn', async () => {
+  it('should be able create a pet', async () => {
     const response = await sut.execute({
       name: 'dog 1',
       about: 'cute',
@@ -27,7 +27,7 @@ describe('Create Pets Use Case', () => {
       requirements: ['requirement 1', 'requirement 2'],
     })
 
-    expect(response.pet.id).toEqual(expect.any(String))
+    expect(response.id).toEqual(expect.any(String))
     expect(response.requirements).toHaveLength(2)
     expect(response.requirements[0]).toEqual(
       expect.objectContaining({ name: 'requirement 1' }),

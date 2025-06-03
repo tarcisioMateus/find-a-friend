@@ -14,6 +14,7 @@ interface CreateUseCaseRequest {
 }
 
 export interface CreateUseCaseResponse {
+  id: string
   name: string
   about: string
   size: Size
