@@ -1,0 +1,36 @@
+name: Run Unit Tests
+
+on: [pull_request] # This defines WHEN the workflow runs (on a push event)
+
+jobs: # Defines the jobs in this workflow
+  run-unit-test: # This is the ID of your job
+    runs-on: ubuntu-latest # This is the REQUIRED runner environment for this job, notice the indentation
+    name: Unit Tests # This is an OPTIONAL, human-readable name for the job
+
+    services:
+        api-find-a-friend:
+          image: bitnami/postgresql
+          ports:
+            - "5432:5432"
+          env:
+            POSTGRESQL_USERNAME: docker
+            POSTGRESQL_PASSWORD: docker
+            POSTGRESQL_DATABASE: apifindafriend
+
+    steps: # Defines the steps within this job
+      - uses: actions/checkout@v4 # Action to check out your repository code
+
+      - uses: actions/setup-node@v4 # Action to set up Node.js environment
+        with:
+          node-version: 18
+          cache: 'npm' # Caches node modules for faster builds
+
+      - name: Install dependencies # Step to install project dependencies
+        run: npm ci
+
+      - name: Run tests # Step to execute your tests
+        run: npm run test:e2e
+        env: 
+          JWT_SECRET: secret
+          DATABASE_URL: "postgresql://docker:docker@localhost:5432/apifindafriend?schema=public"
+          OPENCAGE_API_KEY: "6881f14ece8f4b2bb26fd9023b5f2328"
